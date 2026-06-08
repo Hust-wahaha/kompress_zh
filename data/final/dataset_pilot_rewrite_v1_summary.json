@@ -1,0 +1,15 @@
+{
+  "dataset_tag": "pilot_rewrite_v1",
+  "input_file": "data\\raw\\labeled_pairs_pilot_v1.jsonl",
+  "count": 160,
+  "split_counts": {
+    "train": 128,
+    "val": 16,
+    "test": 16
+  },
+  "avg_original_chars": 519.54,
+  "avg_compressed_chars": 316.49,
+  "avg_compression_ratio": 0.6201,
+  "anchor_row_count": 156,
+  "avg_anchor_count": 10.98
+}

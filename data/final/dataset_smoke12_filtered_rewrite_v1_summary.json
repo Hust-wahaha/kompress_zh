@@ -1,0 +1,15 @@
+{
+  "dataset_tag": "smoke12_filtered_rewrite_v1",
+  "input_file": "data\\raw\\labeled_pairs_smoke12_filtered_v1.jsonl",
+  "count": 12,
+  "split_counts": {
+    "train": 10,
+    "val": 1,
+    "test": 1
+  },
+  "avg_original_chars": 590.08,
+  "avg_compressed_chars": 363.17,
+  "avg_compression_ratio": 0.6353,
+  "anchor_row_count": 12,
+  "avg_anchor_count": 14.67
+}

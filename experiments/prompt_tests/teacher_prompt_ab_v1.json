@@ -1,0 +1,380 @@
+{
+  "model": "deepseek-v4-pro",
+  "run_tag": "teacher_prompt_ab_v1",
+  "sample_count": 4,
+  "variant_count": 3,
+  "best_variant": "balanced",
+  "summary_by_variant": {
+    "conservative": {
+      "count": 4,
+      "avg_compression_ratio": 0.8067508044441747,
+      "avg_anchor_retention_rate": 1.0,
+      "avg_reference_char_f1": 0.834478555149578,
+      "avg_output_chars": 118.75
+    },
+    "balanced": {
+      "count": 4,
+      "avg_compression_ratio": 0.8375420435917673,
+      "avg_anchor_retention_rate": 1.0,
+      "avg_reference_char_f1": 0.868353591522286,
+      "avg_output_chars": 124.25
+    },
+    "aggressive": {
+      "count": 4,
+      "avg_compression_ratio": 0.7888336318377756,
+      "avg_anchor_retention_rate": 1.0,
+      "avg_reference_char_f1": 0.8463969702205705,
+      "avg_output_chars": 117.25
+    }
+  },
+  "results": [
+    {
+      "variant": "aggressive",
+      "sample_id": "sample_doc_chunk",
+      "source": "mainline_doc",
+      "original_text": "当前模型只处理 Headroom 已路由出来的中文 plain text 长段落，重点包括中文任务描述、中文需求与约束、中文文档说明、中文结果解释、中文进度总结、中文交付文本、中文 session 中的长自然语言块。原始代码块、原始 JSON / YAML / XML、原始日志流、原始报错堆栈、原始 diff / patch、原始搜索结果，不作为本模型主任务。",
+      "reference_text": "模型仅处理 Headroom 路由出的中文 plain-text 长段，如任务描述、需求约束、文档说明、结果解释、进度总结、交付文本和 session 自然语言块；原始代码、JSON/YAML/XML、日志、报错堆栈、diff/patch、搜索结果不属主任务。",
+      "compressed_text": "模型仅处理Headroom路由出的中文长段落，含任务描述、需求约束、文档说明、结果解释、进度总结、交付文本、session长自然语言块。不处理原始代码块、JSON/YAML/XML、日志流、报错堆栈、diff/patch、搜索结果。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": false,
+      "quality_notes": "保留核心限制条件与处理范围，删除冗余修饰，压缩为紧凑并列句。",
+      "compression_ratio": 0.6408839779005525,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8699186991869919,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 566,
+        "completion_tokens": 119,
+        "total_tokens": 685,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 566
+      },
+      "raw_response": "{\n  \"compressed_text\": \"模型仅处理Headroom路由出的中文长段落，含任务描述、需求约束、文档说明、结果解释、进度总结、交付文本、session长自然语言块。不处理原始代码块、JSON/YAML/XML、日志流、报错堆栈、diff/patch、搜索结果。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": false,\n  \"quality_notes\": \"保留核心限制条件与处理范围，删除冗余修饰，压缩为紧凑并列句。\"\n}"
+    },
+    {
+      "variant": "aggressive",
+      "sample_id": "sample_eval_focus",
+      "source": "demo",
+      "original_text": "第一版评测不要再围绕答案正确率，而要围绕压缩器本身：至少记录压缩率、长度下降幅度、信息保真、关键锚点保留率和本地推理速度。评测样本优先选择中文需求说明、文档块、结果解释，以及夹杂少量路径和命令的自然语言段落。",
+      "reference_text": "首版评测聚焦压缩器本身：记录压缩率、长度下降、信息保真、锚点保留率与本地推理速度。样本优先选中文需求说明、文档块、结果解释，以及夹少量路径和命令的自然语言段。",
+      "compressed_text": "首版评测聚焦压缩器本身，勿重答案正确率。须记：压缩率、长度降幅、信息保真、关键锚点保留率、本地推理速度。样本优先中文需求说明、文档块、结果解释，及含路径、命令的自然段落。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留所有评测指标和样本类型，删除冗余表达，重组为紧凑句式。",
+      "compression_ratio": 0.8173076923076923,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.829268292682927,
+      "predicted_contains_anchor": false,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 538,
+        "completion_tokens": 114,
+        "total_tokens": 652,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 538
+      },
+      "raw_response": "{\n  \"compressed_text\": \"首版评测聚焦压缩器本身，勿重答案正确率。须记：压缩率、长度降幅、信息保真、关键锚点保留率、本地推理速度。样本优先中文需求说明、文档块、结果解释，及含路径、命令的自然段落。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留所有评测指标和样本类型，删除冗余表达，重组为紧凑句式。\"\n}"
+    },
+    {
+      "variant": "aggressive",
+      "sample_id": "sample_project_split",
+      "source": "demo",
+      "original_text": "当前需要先把中文压缩器项目和旧数学 think 项目分开管理。新主线所有脚本都应只放在 projects/qwen35_zh_plaintext_compressor/ 下，旧项目只保留作 legacy 参考。下一步先补 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。",
+      "reference_text": "先分离新旧项目：新主线脚本只放 `projects/qwen35_zh_plaintext_compressor/`，旧数学 think 线仅作 legacy 参考。下一步补齐 `build_dataset.py`、`validate_dataset.py`、`train_lora.py`、`eval.py` 四个入口。",
+      "compressed_text": "今须分治中文压缩器与旧数学think项目。新主线脚本悉归 projects/qwen35_zh_plaintext_compressor/，旧项目仅存为legacy参考。下一步补四入口：build_dataset.py、validate_dataset.py、train_lora.py、eval.py。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留任务目标（分治项目）、限制条件（新脚本路径、旧项目用途）、下一步行动（补四个脚本文件名），无编造。",
+      "compression_ratio": 0.8685714285714285,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8690095846645369,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 546,
+        "completion_tokens": 132,
+        "total_tokens": 678,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 546
+      },
+      "raw_response": "{\n  \"compressed_text\": \"今须分治中文压缩器与旧数学think项目。新主线脚本悉归 projects/qwen35_zh_plaintext_compressor/，旧项目仅存为legacy参考。下一步补四入口：build_dataset.py、validate_dataset.py、train_lora.py、eval.py。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留任务目标（分治项目）、限制条件（新脚本路径、旧项目用途）、下一步行动（补四个脚本文件名），无编造。\"\n}"
+    },
+    {
+      "variant": "aggressive",
+      "sample_id": "sample_training_constraints",
+      "source": "demo",
+      "original_text": "训练阶段必须显式启用 language-model-only 思路，避免把 vision encoder 带进文本压缩任务。输出目标不是 think，而是 assistant 可见的压缩改写文本；允许轻结构化和轻文言化，但不能牺牲可读性，也不能丢掉文件名、命令、数字这些关键锚点。",
+      "reference_text": "训练需显式走 `language-model-only`，禁止把 vision encoder 带入文本压缩。目标输出是 assistant 可见压缩文本，可轻结构化、轻文言化，但须保留文件名、命令、数字等关键锚点，并保持可读。",
+      "compressed_text": "训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见之压缩改写文本，非 think。可轻结构化、轻文言化，然须保可读性，且不遗文件名、命令、数字等关键锚点。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留所有关键约束：language-model-only、避免vision encoder、输出目标为assistant可见压缩文本、允许轻结构化和轻文言化、保留文件名/命令/数字等锚点。通过文言虚词和短句压缩冗余，未编造新信息。",
+      "compression_ratio": 0.8285714285714286,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8173913043478261,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 540,
+        "completion_tokens": 151,
+        "total_tokens": 691,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 540
+      },
+      "raw_response": "{\n  \"compressed_text\": \"训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见之压缩改写文本，非 think。可轻结构化、轻文言化，然须保可读性，且不遗文件名、命令、数字等关键锚点。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留所有关键约束：language-model-only、避免vision encoder、输出目标为assistant可见压缩文本、允许轻结构化和轻文言化、保留文件名/命令/数字等锚点。通过文言虚词和短句压缩冗余，未编造新信息。\"\n}"
+    },
+    {
+      "variant": "balanced",
+      "sample_id": "sample_doc_chunk",
+      "source": "mainline_doc",
+      "original_text": "当前模型只处理 Headroom 已路由出来的中文 plain text 长段落，重点包括中文任务描述、中文需求与约束、中文文档说明、中文结果解释、中文进度总结、中文交付文本、中文 session 中的长自然语言块。原始代码块、原始 JSON / YAML / XML、原始日志流、原始报错堆栈、原始 diff / patch、原始搜索结果，不作为本模型主任务。",
+      "reference_text": "模型仅处理 Headroom 路由出的中文 plain-text 长段，如任务描述、需求约束、文档说明、结果解释、进度总结、交付文本和 session 自然语言块；原始代码、JSON/YAML/XML、日志、报错堆栈、diff/patch、搜索结果不属主任务。",
+      "compressed_text": "本模型仅处理 Headroom 路由出的中文纯文本长段落，含任务描述、需求约束、文档说明、结果解释、进度总结、交付文本、session 长自然语言块。原始代码块、JSON/YAML/XML、日志流、报错堆栈、diff/patch、搜索结果不属主任务。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留全部关键信息，删除冗余表达，使用轻文言压缩，未编造新内容。",
+      "compression_ratio": 0.6906077348066298,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8941176470588236,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 539,
+        "completion_tokens": 128,
+        "total_tokens": 667,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 539
+      },
+      "raw_response": "{\n  \"compressed_text\": \"本模型仅处理 Headroom 路由出的中文纯文本长段落，含任务描述、需求约束、文档说明、结果解释、进度总结、交付文本、session 长自然语言块。原始代码块、JSON/YAML/XML、日志流、报错堆栈、diff/patch、搜索结果不属主任务。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留全部关键信息，删除冗余表达，使用轻文言压缩，未编造新内容。\"\n}"
+    },
+    {
+      "variant": "balanced",
+      "sample_id": "sample_eval_focus",
+      "source": "demo",
+      "original_text": "第一版评测不要再围绕答案正确率，而要围绕压缩器本身：至少记录压缩率、长度下降幅度、信息保真、关键锚点保留率和本地推理速度。评测样本优先选择中文需求说明、文档块、结果解释，以及夹杂少量路径和命令的自然语言段落。",
+      "reference_text": "首版评测聚焦压缩器本身：记录压缩率、长度下降、信息保真、锚点保留率与本地推理速度。样本优先选中文需求说明、文档块、结果解释，以及夹少量路径和命令的自然语言段。",
+      "compressed_text": "首版评测须聚焦压缩器本身，勿重答案正确率。至少记录压缩率、长度降幅、信息保真、关键锚点保留率及本地推理速度。评测样本优先择中文需求说明、文档块、结果解释，及含少量路径与命令的自然语言段落。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留所有关键指标和样本类型，删除冗余表达，使用轻文言压缩，如“须”“勿”“择”等，保持现代中文可读性。",
+      "compression_ratio": 0.9038461538461539,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8439306358381502,
+      "predicted_contains_anchor": false,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 511,
+        "completion_tokens": 135,
+        "total_tokens": 646,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 511
+      },
+      "raw_response": "{\n  \"compressed_text\": \"首版评测须聚焦压缩器本身，勿重答案正确率。至少记录压缩率、长度降幅、信息保真、关键锚点保留率及本地推理速度。评测样本优先择中文需求说明、文档块、结果解释，及含少量路径与命令的自然语言段落。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留所有关键指标和样本类型，删除冗余表达，使用轻文言压缩，如“须”“勿”“择”等，保持现代中文可读性。\"\n}"
+    },
+    {
+      "variant": "balanced",
+      "sample_id": "sample_project_split",
+      "source": "demo",
+      "original_text": "当前需要先把中文压缩器项目和旧数学 think 项目分开管理。新主线所有脚本都应只放在 projects/qwen35_zh_plaintext_compressor/ 下，旧项目只保留作 legacy 参考。下一步先补 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。",
+      "reference_text": "先分离新旧项目：新主线脚本只放 `projects/qwen35_zh_plaintext_compressor/`，旧数学 think 线仅作 legacy 参考。下一步补齐 `build_dataset.py`、`validate_dataset.py`、`train_lora.py`、`eval.py` 四个入口。",
+      "compressed_text": "需将中文压缩器项目与旧数学think项目分开管理。新主线脚本仅置于 projects/qwen35_zh_plaintext_compressor/ 下，旧项目留作legacy参考。下一步补全 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留关键路径、文件名和下一步行动，删除冗余表达，压缩明显。",
+      "compression_ratio": 0.92,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8695652173913043,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 519,
+        "completion_tokens": 120,
+        "total_tokens": 639,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 519
+      },
+      "raw_response": "{\n  \"compressed_text\": \"需将中文压缩器项目与旧数学think项目分开管理。新主线脚本仅置于 projects/qwen35_zh_plaintext_compressor/ 下，旧项目留作legacy参考。下一步补全 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留关键路径、文件名和下一步行动，删除冗余表达，压缩明显。\"\n}"
+    },
+    {
+      "variant": "balanced",
+      "sample_id": "sample_training_constraints",
+      "source": "demo",
+      "original_text": "训练阶段必须显式启用 language-model-only 思路，避免把 vision encoder 带进文本压缩任务。输出目标不是 think，而是 assistant 可见的压缩改写文本；允许轻结构化和轻文言化，但不能牺牲可读性，也不能丢掉文件名、命令、数字这些关键锚点。",
+      "reference_text": "训练需显式走 `language-model-only`，禁止把 vision encoder 带入文本压缩。目标输出是 assistant 可见压缩文本，可轻结构化、轻文言化，但须保留文件名、命令、数字等关键锚点，并保持可读。",
+      "compressed_text": "训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见的压缩改写文本，非 think。可轻结构化、轻文言化，但需保持可读性，并保留文件名、命令、数字等关键锚点。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留原意，删除冗余，压缩表达，关键锚点（language-model-only、vision encoder、assistant、think）均保留。",
+      "compression_ratio": 0.8357142857142857,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8658008658008658,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 513,
+        "completion_tokens": 123,
+        "total_tokens": 636,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 513
+      },
+      "raw_response": "{\n  \"compressed_text\": \"训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见的压缩改写文本，非 think。可轻结构化、轻文言化，但需保持可读性，并保留文件名、命令、数字等关键锚点。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留原意，删除冗余，压缩表达，关键锚点（language-model-only、vision encoder、assistant、think）均保留。\"\n}"
+    },
+    {
+      "variant": "conservative",
+      "sample_id": "sample_doc_chunk",
+      "source": "mainline_doc",
+      "original_text": "当前模型只处理 Headroom 已路由出来的中文 plain text 长段落，重点包括中文任务描述、中文需求与约束、中文文档说明、中文结果解释、中文进度总结、中文交付文本、中文 session 中的长自然语言块。原始代码块、原始 JSON / YAML / XML、原始日志流、原始报错堆栈、原始 diff / patch、原始搜索结果，不作为本模型主任务。",
+      "reference_text": "模型仅处理 Headroom 路由出的中文 plain-text 长段，如任务描述、需求约束、文档说明、结果解释、进度总结、交付文本和 session 自然语言块；原始代码、JSON/YAML/XML、日志、报错堆栈、diff/patch、搜索结果不属主任务。",
+      "compressed_text": "本模型仅处理已路由的中文长段落，包括任务描述、需求约束、文档说明、结果解释、进度总结、交付文本及会话中的长自然语言块。不处理代码块、JSON/YAML/XML、日志、报错堆栈、diff/patch、搜索结果。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": false,
+      "quality_notes": "保留原文核心信息：处理对象为中文长段落，列举具体类型；明确排除非处理对象。压缩后更紧凑，未引入新内容。",
+      "compression_ratio": 0.574585635359116,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.7606837606837608,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 532,
+        "completion_tokens": 132,
+        "total_tokens": 664,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 532
+      },
+      "raw_response": "{\n  \"compressed_text\": \"本模型仅处理已路由的中文长段落，包括任务描述、需求约束、文档说明、结果解释、进度总结、交付文本及会话中的长自然语言块。不处理代码块、JSON/YAML/XML、日志、报错堆栈、diff/patch、搜索结果。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": false,\n  \"quality_notes\": \"保留原文核心信息：处理对象为中文长段落，列举具体类型；明确排除非处理对象。压缩后更紧凑，未引入新内容。\"\n}"
+    },
+    {
+      "variant": "conservative",
+      "sample_id": "sample_eval_focus",
+      "source": "demo",
+      "original_text": "第一版评测不要再围绕答案正确率，而要围绕压缩器本身：至少记录压缩率、长度下降幅度、信息保真、关键锚点保留率和本地推理速度。评测样本优先选择中文需求说明、文档块、结果解释，以及夹杂少量路径和命令的自然语言段落。",
+      "reference_text": "首版评测聚焦压缩器本身：记录压缩率、长度下降、信息保真、锚点保留率与本地推理速度。样本优先选中文需求说明、文档块、结果解释，以及夹少量路径和命令的自然语言段。",
+      "compressed_text": "首版评测应聚焦压缩器本身，而非答案正确率。至少记录压缩率、长度降幅、信息保真、关键锚点保留率及本地推理速度。评测样本优先选中文需求说明、文档块、结果解释，及含少量路径与命令的自然语言段落。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留所有关键指标和样本类型，删除冗余表达，压缩后仍可直接使用。",
+      "compression_ratio": 0.9038461538461539,
+      "anchor_kept": 0,
+      "anchor_total": 0,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8554913294797688,
+      "predicted_contains_anchor": false,
+      "source_anchor_count": 0,
+      "usage": {
+        "prompt_tokens": 504,
+        "completion_tokens": 118,
+        "total_tokens": 622,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 504
+      },
+      "raw_response": "{\n  \"compressed_text\": \"首版评测应聚焦压缩器本身，而非答案正确率。至少记录压缩率、长度降幅、信息保真、关键锚点保留率及本地推理速度。评测样本优先选中文需求说明、文档块、结果解释，及含少量路径与命令的自然语言段落。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留所有关键指标和样本类型，删除冗余表达，压缩后仍可直接使用。\"\n}"
+    },
+    {
+      "variant": "conservative",
+      "sample_id": "sample_project_split",
+      "source": "demo",
+      "original_text": "当前需要先把中文压缩器项目和旧数学 think 项目分开管理。新主线所有脚本都应只放在 projects/qwen35_zh_plaintext_compressor/ 下，旧项目只保留作 legacy 参考。下一步先补 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。",
+      "reference_text": "先分离新旧项目：新主线脚本只放 `projects/qwen35_zh_plaintext_compressor/`，旧数学 think 线仅作 legacy 参考。下一步补齐 `build_dataset.py`、`validate_dataset.py`、`train_lora.py`、`eval.py` 四个入口。",
+      "compressed_text": "需将中文压缩器项目与旧数学think项目分开管理。新主线脚本仅置于 projects/qwen35_zh_plaintext_compressor/ 下，旧项目留作legacy参考。下一步补全 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留任务目标、约束、下一步行动项及文件名，删除冗余表达，压缩后仍可直接使用。",
+      "compression_ratio": 0.92,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8695652173913043,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 512,
+        "completion_tokens": 126,
+        "total_tokens": 638,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 512
+      },
+      "raw_response": "{\n  \"compressed_text\": \"需将中文压缩器项目与旧数学think项目分开管理。新主线脚本仅置于 projects/qwen35_zh_plaintext_compressor/ 下，旧项目留作legacy参考。下一步补全 build_dataset.py、validate_dataset.py、train_lora.py、eval.py 四个入口。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留任务目标、约束、下一步行动项及文件名，删除冗余表达，压缩后仍可直接使用。\"\n}"
+    },
+    {
+      "variant": "conservative",
+      "sample_id": "sample_training_constraints",
+      "source": "demo",
+      "original_text": "训练阶段必须显式启用 language-model-only 思路，避免把 vision encoder 带进文本压缩任务。输出目标不是 think，而是 assistant 可见的压缩改写文本；允许轻结构化和轻文言化，但不能牺牲可读性，也不能丢掉文件名、命令、数字这些关键锚点。",
+      "reference_text": "训练需显式走 `language-model-only`，禁止把 vision encoder 带入文本压缩。目标输出是 assistant 可见压缩文本，可轻结构化、轻文言化，但须保留文件名、命令、数字等关键锚点，并保持可读。",
+      "compressed_text": "训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见的压缩改写文本，非 think。可轻结构化、轻文言化，但须保可读性，并保留文件名、命令、数字等关键锚点。",
+      "style_tag": "lite_wenyan_structured",
+      "contains_anchor": true,
+      "quality_notes": "保留原意，删除冗余表达，压缩后仍包含所有关键约束和锚点要求。",
+      "compression_ratio": 0.8285714285714286,
+      "anchor_kept": 1,
+      "anchor_total": 1,
+      "anchor_retention_rate": 1.0,
+      "reference_char_f1": 0.8521739130434783,
+      "predicted_contains_anchor": true,
+      "source_anchor_count": 1,
+      "usage": {
+        "prompt_tokens": 506,
+        "completion_tokens": 114,
+        "total_tokens": 620,
+        "prompt_tokens_details": {
+          "cached_tokens": 0
+        },
+        "prompt_cache_hit_tokens": 0,
+        "prompt_cache_miss_tokens": 506
+      },
+      "raw_response": "{\n  \"compressed_text\": \"训练时须显式启用 language-model-only，勿引入 vision encoder。输出为 assistant 可见的压缩改写文本，非 think。可轻结构化、轻文言化，但须保可读性，并保留文件名、命令、数字等关键锚点。\",\n  \"style_tag\": \"lite_wenyan_structured\",\n  \"contains_anchor\": true,\n  \"quality_notes\": \"保留原意，删除冗余表达，压缩后仍包含所有关键约束和锚点要求。\"\n}"
+    }
+  ]
+}

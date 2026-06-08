@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.venv/
+venv/
+
+.DS_Store
+Thumbs.db
+
+experiments/prompt_tests/*.tmp

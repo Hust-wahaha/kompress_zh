@@ -1,0 +1,15 @@
+{
+  "dataset_tag": "demo_rewrite_v1",
+  "input_file": "data\\raw\\labeled_pairs_demo_v1.jsonl",
+  "count": 3,
+  "split_counts": {
+    "train": 1,
+    "val": 1,
+    "test": 1
+  },
+  "avg_original_chars": 139.67,
+  "avg_compressed_chars": 118,
+  "avg_compression_ratio": 0.8313,
+  "anchor_row_count": 2,
+  "avg_anchor_count": 1
+}
