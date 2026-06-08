@@ -8,8 +8,8 @@
     "test": 16
   },
   "avg_original_chars": 519.54,
-  "avg_compressed_chars": 316.49,
-  "avg_compression_ratio": 0.6201,
+  "avg_compressed_chars": 316.46,
+  "avg_compression_ratio": 0.62,
   "anchor_row_count": 156,
   "avg_anchor_count": 10.98
 }
