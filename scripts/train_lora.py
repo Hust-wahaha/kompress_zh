@@ -39,7 +39,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--save-steps", type=int, default=25)
     parser.add_argument("--eval-steps", type=int, default=25)
     parser.add_argument("--logging-steps", type=int, default=5)
-    parser.add_argument("--language-model-only", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--language-model-only",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Must remain enabled for this plain-text compressor; vision encoder is not used.",
+    )
     return parser.parse_args()
 
 
@@ -65,6 +70,8 @@ def main() -> None:
     seed_everything(42)
 
     args = parse_args()
+    if not args.language_model_only:
+        raise SystemExit("`--no-language-model-only` is forbidden for this project.")
     train_path = resolve_dataset_path(args, "train")
     val_path = resolve_dataset_path(args, "val")
     model_tag = normalize_model_tag(args.model_id, args.model_tag)
@@ -163,4 +170,3 @@ if __name__ == "__main__":
         parse_args()
         raise SystemExit(0)
     main()
-

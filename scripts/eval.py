@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 from statistics import mean
@@ -25,6 +26,7 @@ from zh_plaintext_compressor.common.schema import (
 )
 
 MODEL_ID = "Qwen/Qwen3.5-0.8B"
+THINK_SHELL_PATTERN = re.compile(r"^\s*<think>\s*</think>\s*", re.IGNORECASE | re.DOTALL)
 
 
 def parse_args() -> argparse.Namespace:
@@ -44,7 +46,12 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--run-tag", type=str, default="reference_eval")
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--system", type=str, default=DEFAULT_SYSTEM_PROMPT)
-    parser.add_argument("--language-model-only", action=argparse.BooleanOptionalAction, default=True)
+    parser.add_argument(
+        "--language-model-only",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Must remain enabled for this plain-text compressor; vision encoder is not used.",
+    )
     return parser.parse_args()
 
 
@@ -58,6 +65,10 @@ def read_jsonl(path: Path, limit: int | None) -> list[dict]:
     return rows[:limit] if limit else rows
 
 
+def normalize_prediction_text(text: str) -> str:
+    return THINK_SHELL_PATTERN.sub("", text).strip()
+
+
 def build_engine(model_id: str, adapter: str | None, max_batch_size: int, language_model_only: bool):
     from peft import PeftModel
     from swift import get_template
@@ -69,6 +80,11 @@ def build_engine(model_id: str, adapter: str | None, max_batch_size: int, langua
     if adapter:
         model = PeftModel.from_pretrained(model, adapter)
     template = get_template(tokenizer, default_system=DEFAULT_SYSTEM_PROMPT)
+    # Qwen3.5 templates default to a thinking prefix; force visible-output-only eval.
+    if hasattr(template, "enable_thinking"):
+        template.enable_thinking = False
+    if hasattr(template, "response_prefix"):
+        template.response_prefix = ""
     return TransformersEngine(model, template=template, max_batch_size=max_batch_size)
 
 
@@ -99,7 +115,7 @@ def run_model(
     responses = engine.infer(requests, request_config)
     output_rows = []
     for row, response in zip(rows, responses):
-        prediction = response.choices[0].message.content
+        prediction = normalize_prediction_text(response.choices[0].message.content)
         output_rows.append(
             {
                 "sample_id": row["sample_id"],
@@ -163,6 +179,8 @@ def summarize_predictions(name: str, rows: list[dict]) -> dict:
 
 def main() -> None:
     args = parse_args()
+    if not args.language_model_only:
+        raise SystemExit("`--no-language-model-only` is forbidden for this project.")
     test_file = args.test_file or dataset_file("test", args.dataset_tag)
     rows = read_jsonl(test_file, args.limit)
     model_tag = normalize_model_tag(args.model_id, args.model_tag)
@@ -216,4 +234,3 @@ if __name__ == "__main__":
         parse_args()
         raise SystemExit(0)
     main()
-
