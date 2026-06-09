@@ -16,7 +16,7 @@ if str(SRC_DIR) not in sys.path:
     sys.path.insert(0, str(SRC_DIR))
 
 from zh_plaintext_compressor.common.schema import (
-    anchor_retention,
+    anchor_retention_breakdown,
     char_compression_ratio,
     char_f1,
     extract_anchor_tokens,
@@ -198,7 +198,11 @@ def call_api(model: str, system_prompt: str, user_prompt: str, timeout: int, api
 def score_output(original_text: str, reference_text: str, result: dict) -> dict:
     compressed_text = str(result.get("compressed_text", "")).strip()
     ratio = char_compression_ratio(original_text, compressed_text)
-    kept, total = anchor_retention(original_text, compressed_text)
+    anchor_breakdown = anchor_retention_breakdown(original_text, compressed_text)
+    combined = anchor_breakdown["combined"]
+    strict = anchor_breakdown["strict"]
+    soft = anchor_breakdown["soft"]
+    kept, total = int(combined["kept"]), int(combined["total"])
     anchor_rate = kept / total if total else 1.0
     reference_f1 = char_f1(reference_text, compressed_text)
     anchor_count = len(extract_anchor_tokens(original_text))
@@ -211,6 +215,12 @@ def score_output(original_text: str, reference_text: str, result: dict) -> dict:
         "anchor_kept": kept,
         "anchor_total": total,
         "anchor_retention_rate": anchor_rate,
+        "strict_anchor_kept": strict["kept"],
+        "strict_anchor_total": strict["total"],
+        "strict_anchor_retention_rate": strict["rate"],
+        "soft_anchor_kept": soft["kept"],
+        "soft_anchor_total": soft["total"],
+        "soft_anchor_retention_rate": soft["rate"],
         "reference_char_f1": reference_f1,
         "predicted_contains_anchor": has_anchor_content(compressed_text),
         "source_anchor_count": anchor_count,
@@ -251,6 +261,12 @@ def summarize_variant(rows: list[dict]) -> dict:
         "count": len(rows),
         "avg_compression_ratio": mean(row["compression_ratio"] for row in rows),
         "avg_anchor_retention_rate": mean(row["anchor_retention_rate"] for row in rows),
+        "avg_strict_anchor_retention_rate": mean(
+            row["strict_anchor_retention_rate"] for row in rows if row["strict_anchor_retention_rate"] is not None
+        ),
+        "avg_soft_anchor_retention_rate": mean(
+            row["soft_anchor_retention_rate"] for row in rows if row["soft_anchor_retention_rate"] is not None
+        ),
         "avg_reference_char_f1": mean(row["reference_char_f1"] for row in rows),
         "avg_output_chars": mean(len(row["compressed_text"]) for row in rows),
     }

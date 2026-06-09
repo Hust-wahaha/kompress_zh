@@ -16,6 +16,7 @@ from zh_plaintext_compressor.common.schema import (
     SOURCE_POOL_REQUIRED_FIELDS,
     SUPPORTED_SPLITS,
     TRAINING_REQUIRED_FIELDS,
+    anchor_retention_breakdown,
     anchor_retention,
     char_compression_ratio,
     has_chinese,
@@ -101,13 +102,25 @@ def validate_training(
             print(f"[{index}] compressed_text is not shorter than original_text")
             errors += 1
         if row.get("contains_anchor"):
-            kept, total = anchor_retention(row["original_text"], row["compressed_text"])
-            if total > 0 and kept / total < min_anchor_retention:
+            anchor_breakdown = anchor_retention_breakdown(row["original_text"], row["compressed_text"])
+            strict = anchor_breakdown["strict"]
+            combined = anchor_breakdown["combined"]
+            effective_rate = strict["rate"] if strict["rate"] is not None else combined["rate"]
+            effective_kept = strict["kept"] if strict["rate"] is not None else combined["kept"]
+            effective_total = strict["total"] if strict["rate"] is not None else combined["total"]
+            if effective_rate is not None and effective_rate < min_anchor_retention:
                 if anchor_policy == "error":
-                    print(f"[{index}] anchor retention too low: {kept}/{total}")
+                    print(
+                        f"[{index}] anchor retention too low: "
+                        f"strict={strict['kept']}/{strict['total']} combined={combined['kept']}/{combined['total']}"
+                    )
                     errors += 1
                 elif anchor_policy == "warn":
-                    print(f"[warn:{index}] anchor retention below threshold: {kept}/{total}")
+                    print(
+                        f"[warn:{index}] anchor retention below threshold: "
+                        f"effective={effective_kept}/{effective_total} "
+                        f"(strict={strict['kept']}/{strict['total']}, combined={combined['kept']}/{combined['total']})"
+                    )
                     warnings += 1
     return errors, warnings, ratios
 

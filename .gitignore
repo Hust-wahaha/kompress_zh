@@ -10,3 +10,5 @@ venv/
 Thumbs.db
 
 experiments/prompt_tests/*.tmp
+experiments/remote_sync/
+experiments/review_queues/

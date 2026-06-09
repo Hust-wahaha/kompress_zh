@@ -1,0 +1,15 @@
+{
+  "dataset_tag": "pilot_rewrite_v2_anchor_aug",
+  "input_file": "data\\raw\\labeled_pairs_pilot_v2_anchor_aug.jsonl",
+  "count": 185,
+  "split_counts": {
+    "train": 149,
+    "val": 18,
+    "test": 18
+  },
+  "avg_original_chars": 508.52,
+  "avg_compressed_chars": 314.68,
+  "avg_compression_ratio": 0.634,
+  "anchor_row_count": 181,
+  "avg_anchor_count": 11.59
+}

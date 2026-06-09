@@ -20,6 +20,7 @@ from zh_plaintext_compressor.common.naming import (
 )
 from zh_plaintext_compressor.common.schema import (
     DEFAULT_SYSTEM_PROMPT,
+    anchor_retention_breakdown,
     anchor_retention,
     char_compression_ratio,
     char_f1,
@@ -137,17 +138,27 @@ def summarize_predictions(name: str, rows: list[dict]) -> dict:
     prediction_ratios = []
     reference_ratios = []
     anchor_rates = []
+    strict_anchor_rates = []
+    soft_anchor_rates = []
     char_f1_scores = []
     for row in rows:
         prediction_ratio = char_compression_ratio(row["original_text"], row["prediction_text"])
         reference_ratio = char_compression_ratio(row["original_text"], row["reference_text"])
-        kept, total = anchor_retention(row["original_text"], row["prediction_text"])
+        anchor_breakdown = anchor_retention_breakdown(row["original_text"], row["prediction_text"])
+        combined = anchor_breakdown["combined"]
+        strict = anchor_breakdown["strict"]
+        soft = anchor_breakdown["soft"]
+        kept, total = int(combined["kept"]), int(combined["total"])
         anchor_rate = kept / total if total else None
         score = char_f1(row["reference_text"], row["prediction_text"])
         prediction_ratios.append(prediction_ratio)
         reference_ratios.append(reference_ratio)
         if anchor_rate is not None:
             anchor_rates.append(anchor_rate)
+        if strict["rate"] is not None:
+            strict_anchor_rates.append(float(strict["rate"]))
+        if soft["rate"] is not None:
+            soft_anchor_rates.append(float(soft["rate"]))
         char_f1_scores.append(score)
         detailed.append(
             {
@@ -158,6 +169,18 @@ def summarize_predictions(name: str, rows: list[dict]) -> dict:
                 "anchor_kept": kept,
                 "anchor_total": total,
                 "anchor_retention_rate": anchor_rate,
+                "strict_anchor_kept": strict["kept"],
+                "strict_anchor_total": strict["total"],
+                "strict_anchor_retention_rate": strict["rate"],
+                "soft_anchor_kept": soft["kept"],
+                "soft_anchor_total": soft["total"],
+                "soft_anchor_retention_rate": soft["rate"],
+                "combined_anchor_kept_tokens": combined["kept_tokens"],
+                "combined_anchor_missing_tokens": combined["missing_tokens"],
+                "strict_anchor_kept_tokens": strict["kept_tokens"],
+                "strict_anchor_missing_tokens": strict["missing_tokens"],
+                "soft_anchor_kept_tokens": soft["kept_tokens"],
+                "soft_anchor_missing_tokens": soft["missing_tokens"],
                 "char_f1": score,
                 "prediction_text": row["prediction_text"],
                 "reference_text": row["reference_text"],
@@ -170,6 +193,8 @@ def summarize_predictions(name: str, rows: list[dict]) -> dict:
             "avg_prediction_ratio": mean(prediction_ratios) if prediction_ratios else 0.0,
             "avg_reference_ratio": mean(reference_ratios) if reference_ratios else 0.0,
             "avg_anchor_retention_rate": mean(anchor_rates) if anchor_rates else 0.0,
+            "avg_strict_anchor_retention_rate": mean(strict_anchor_rates) if strict_anchor_rates else 0.0,
+            "avg_soft_anchor_retention_rate": mean(soft_anchor_rates) if soft_anchor_rates else 0.0,
             "avg_char_f1": mean(char_f1_scores) if char_f1_scores else 0.0,
             "avg_prediction_chars": mean(len(row["prediction_text"]) for row in rows) if rows else 0.0,
         },
@@ -218,6 +243,8 @@ def main() -> None:
                     name: {
                         "avg_prediction_ratio": result["overall"]["avg_prediction_ratio"],
                         "avg_anchor_retention_rate": result["overall"]["avg_anchor_retention_rate"],
+                        "avg_strict_anchor_retention_rate": result["overall"]["avg_strict_anchor_retention_rate"],
+                        "avg_soft_anchor_retention_rate": result["overall"]["avg_soft_anchor_retention_rate"],
                         "avg_char_f1": result["overall"]["avg_char_f1"],
                     }
                     for name, result in summary["results"].items()
