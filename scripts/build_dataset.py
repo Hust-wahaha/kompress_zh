@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -46,6 +47,7 @@ def parse_args() -> argparse.Namespace:
     source_pool.add_argument("--min-chars", type=int, default=200)
     source_pool.add_argument("--target-chars", type=int, default=500)
     source_pool.add_argument("--max-chars", type=int, default=800)
+    source_pool.add_argument("--overlap-segments", type=int, default=0)
 
     training = subparsers.add_parser("training")
     training.add_argument("--input-file", type=Path, required=True)
@@ -131,6 +133,7 @@ def build_source_pool_rows(
     min_chars: int,
     target_chars: int,
     max_chars: int,
+    overlap_segments: int = 0,
 ) -> list[dict]:
     rows: list[dict] = []
     files = sorted(path for path in input_dir.rglob("*") if path.suffix.lower() in {".md", ".txt"})
@@ -155,8 +158,9 @@ def build_source_pool_rows(
                             )
                         )
                         chunk_index += 1
-                    current_parts = [segment]
-                    current_length = len(segment)
+                    overlap = current_parts[-overlap_segments:] if overlap_segments > 0 else []
+                    current_parts = overlap + [segment]
+                    current_length = sum(len(part) for part in current_parts) + max(0, 2 * (len(current_parts) - 1))
                 else:
                     current_parts.append(segment)
                     current_length = candidate_length
@@ -172,8 +176,9 @@ def build_source_pool_rows(
                             )
                         )
                         chunk_index += 1
-                    current_parts = []
-                    current_length = 0
+                    overlap = current_parts[-overlap_segments:] if overlap_segments > 0 else []
+                    current_parts = overlap[:]
+                    current_length = sum(len(part) for part in current_parts) + max(0, 2 * (len(current_parts) - 1))
         if current_parts:
             chunk_text = normalize_whitespace("\n\n".join(current_parts))
             if len(chunk_text) >= min_chars:
@@ -206,8 +211,9 @@ def make_source_pool_row(file_path: Path, chunk_index: int, source_type: str, ch
     }
 
 
-def infer_split(index: int) -> str:
-    mod = index % 10
+def infer_split(sample_key: str) -> str:
+    digest = hashlib.md5(sample_key.encode("utf-8")).hexdigest()
+    mod = int(digest[:8], 16) % 10
     if mod < 8:
         return "train"
     if mod == 8:
@@ -225,13 +231,14 @@ def normalize_labeled_row(
 ) -> dict:
     original_text = normalize_whitespace(row["original_text"])
     compressed_text = normalize_whitespace(row["compressed_text"])
-    split = row.get("split") or infer_split(index)
+    sample_id = row.get("sample_id") or f"sample-{index:04d}"
+    split = row.get("split") or infer_split(sample_id)
     if split not in SUPPORTED_SPLITS:
         raise ValueError(f"Unsupported split: {split}")
     style_tag = row.get("style_tag") or default_style_tag
     contains_anchor = bool(row.get("contains_anchor", has_anchor_content(original_text)))
     return {
-        "sample_id": row.get("sample_id") or f"sample-{index:04d}",
+        "sample_id": sample_id,
         "source_type": row.get("source_type", "doc_chunk"),
         "source_name": row.get("source_name", f"source-{index:04d}"),
         "split": split,
@@ -300,6 +307,7 @@ def build_source_pool(args: argparse.Namespace) -> None:
         min_chars=args.min_chars,
         target_chars=args.target_chars,
         max_chars=args.max_chars,
+        overlap_segments=args.overlap_segments,
     )
     output_path = source_pool_file(args.source_pool_tag)
     write_jsonl(output_path, rows)

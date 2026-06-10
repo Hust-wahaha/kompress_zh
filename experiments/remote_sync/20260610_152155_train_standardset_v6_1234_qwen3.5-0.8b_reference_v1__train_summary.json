@@ -1,0 +1,32 @@
+{
+  "run_dir": "/root/projects/qwen35_zh_plaintext_compressor/experiments/20260610_152155_train_standardset_v6_1234_qwen3.5-0.8b_reference_v1",
+  "dataset_tag": "standardset_v6_1234",
+  "model_id": "Qwen/Qwen3.5-0.8B",
+  "model_tag": "qwen3.5-0.8b",
+  "checkpoint": "checkpoint-61",
+  "language_model_only": true,
+  "train": {
+    "train_runtime_seconds": 2572,
+    "train_loss": 0.5575,
+    "epoch": 1.0,
+    "train_samples_per_second": 0.378,
+    "train_steps_per_second": 0.024
+  },
+  "final_eval_on_val": {
+    "eval_loss": 0.5315,
+    "eval_token_acc": 0.8566,
+    "eval_runtime_seconds": 163.2,
+    "eval_samples_per_second": 0.79,
+    "eval_steps_per_second": 0.79
+  },
+  "notable_intermediate_eval": {
+    "step_40": {
+      "eval_loss": 0.5355,
+      "eval_token_acc": 0.856
+    },
+    "step_60": {
+      "eval_loss": 0.5314,
+      "eval_token_acc": 0.8568
+    }
+  }
+}

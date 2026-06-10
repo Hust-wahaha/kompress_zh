@@ -1,0 +1,29 @@
+{
+  "note": "Manual audit on 2026-06-10 for 23-sample targeted400 final audit pack; no blocking semantic-loss cases found.",
+  "accept": [
+    "external_homecareclaw_docs_v1__homecareclaw_teacher_report_workflow_dataset_integrated_20260608-0002",
+    "external_homecareclaw_docs_v1__homecareclaw_teacher_report_workflow_atomic_skills_focus_20260608-0007",
+    "external_homecareclaw_docs_v1__homecareclaw_project_panorama_20260528-0020",
+    "external_homecareclaw_docs_v1__homecareclaw_teacher_report_workflow_dataset_brief_20260608-0005",
+    "external_omni_lingua_docs_v2__HOTFIX_UUID_CONFLICT-0001",
+    "external_omni_lingua_docs_v2__TEST_INSTRUCTIONS-0000",
+    "project_docs_dense_v3__CHINESE_KOMPRESS_LANDSCAPE_SURVEY-0006",
+    "external_homecareclaw_docs_v1__homecareclaw_teacher_report_workflow_atomic_skills_focus_20260608-0008",
+    "external_omni_lingua_docs_v2__COPYRIGHT_UPLOAD_RULES-0006",
+    "external_homecareclaw_docs_v1__task_grouping_for_agent_models_v1-0004",
+    "external_homecareclaw_docs_v1__homecareclaw_targeted_dataset_expansion_20260606-0013",
+    "external_omni_lingua_docs_v2__COPYRIGHT_INTERNAL_REDLINES-0007",
+    "external_homecareclaw_docs_v1__research_basis_metrics_and_workflow_v1-0008",
+    "workspace_local_repo_docs_dense_v3__PROJECT_PROGRESS-0031",
+    "external_omni_lingua_docs_v2__TEAM_QUICKSTART-0002",
+    "external_homecareclaw_docs_v1__homecareclaw_safety_qa_explainer_20260528-0013",
+    "external_system_integration_curated_v1__final_report_full_draft-0083",
+    "external_system_integration_curated_v1__final_report_excel_mapping-0041",
+    "external_omni_lingua_docs_v2__BRANCHING-0000",
+    "project_docs_dense_v3__SOURCE_POOL_EXPANSION_WORKLIST-0001",
+    "external_omni_lingua_docs_v2__QUICKSTART-0001",
+    "external_homecareclaw_docs_v1__homecareclaw_survey_map_20260528-0025",
+    "project_docs_dense_v3__DATASET_V1_CONSTRUCTION_PLAN-0004"
+  ],
+  "defer": []
+}

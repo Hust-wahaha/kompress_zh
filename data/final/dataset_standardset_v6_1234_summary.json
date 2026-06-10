@@ -1,0 +1,15 @@
+{
+  "dataset_tag": "standardset_v6_1234",
+  "input_file": "data\\raw\\labeled_pairs_pilot_v6_targeted400_p2_audited_merge.jsonl",
+  "count": 1234,
+  "split_counts": {
+    "train": 973,
+    "val": 129,
+    "test": 132
+  },
+  "avg_original_chars": 430.67,
+  "avg_compressed_chars": 278.5,
+  "avg_compression_ratio": 0.6563,
+  "anchor_row_count": 1223,
+  "avg_anchor_count": 3.96
+}

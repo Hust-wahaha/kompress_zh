@@ -1,0 +1,21 @@
+{
+  "run_dir": "/root/projects/qwen35_zh_plaintext_compressor/experiments/20260610_160737_eval_standardset_v6_1234_qwen3.5-0.8b_reference_v1_test_eval",
+  "dataset_tag": "standardset_v6_1234",
+  "model_id": "Qwen/Qwen3.5-0.8B",
+  "model_tag": "qwen3.5-0.8b",
+  "test_file": "/root/projects/qwen35_zh_plaintext_compressor/data/final/test_standardset_v6_1234.jsonl",
+  "language_model_only": true,
+  "results": {
+    "target": {
+      "model_name": "target",
+      "overall": {
+        "count": 132,
+        "avg_prediction_ratio": 0.7425231723441346,
+        "avg_anchor_retention_rate": 0.8157085821076647,
+        "avg_strict_anchor_retention_rate": 0.9216216216216216,
+        "avg_soft_anchor_retention_rate": 0.8075190855530662,
+        "avg_char_f1": 0.8039333485110489
+      }
+    }
+  }
+}
