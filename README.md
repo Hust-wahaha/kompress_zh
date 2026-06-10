@@ -7,7 +7,13 @@
 [![Method](https://img.shields.io/badge/method-Swift%20%2B%20LoRA-b45309)](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
 [![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_DRAFT_BASELINE_V1.md)
 
+<p align="center">
+  <img src="./docs/assets/readme/kompress_zh_banner_v3.png" alt="kompress_zh README banner" width="100%">
+</p>
+
 > A Chinese plain-text compressor for agent-grade context, not a generic summarizer.
+
+> **Qwen3.5-0.8B baseline. 25.7% average reduction on anchor-heavy Chinese agent text. 92.2% strict anchor retention. 99.1% anchor-bearing data.**
 
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的压缩改写项目。  
 它专门处理中文自然语言长段，把文本压得更短，同时尽量保留语义、路径、命令、文件名、URL、数字条件等关键锚点，并维持一种适合继续喂给强模型阅读的高信息密度风格。
@@ -157,9 +163,9 @@
 - 路径和文件名仍然保留
 - 后续模型继续读时，约束没有被压坏
 
-## Real Examples from the Test Set
+## Representative Test-Set Cases
 
-下面不是手写 demo，而是来自当前 baseline 测试集的真实样本类型。
+下面不是手写 demo，而是来自当前 baseline 测试集的真实 case。
 
 ### Example A: Checklist Compression with Anchor Preservation
 
@@ -193,35 +199,31 @@
 - 关键路径与文件名保留
 - 输出仍然适合继续进入下一步 Agent 流程
 
-### Example B: Dense Schema / Spec Compression
+### Example B: Benchmark / Ops Rule Compression
 
 原文：
 
 ```text
-### 主仓库核心必填
+当前统一基线评测入口是 `scripts/eval_compare_full.py`。
 
-### 结构化思维方向可选必填
+未经统一确认，不要私自修改以下核心口径：
 
-- 做 structuredthink 任务时：
-- `structured_think`
-
-### think 方向可选必填
-
-- 做当前主线 think 任务时：
-- `modern_think`
-- `classical_think`
+- `max_tokens`
+- 答案抽取规则
+- baseline / finetuned 对照方式
+- `DeepSeek` 复核模式
 ```
 
 模型输出：
 
 ```text
-主仓库核心必填：结构化思维方向可选必填，做 structuredthink 任务时必填 `structured_think`；think 方向可选必填，做当前主线 think 任务时必填 `modern_think` 或 `classical_think`。
+Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.py，勿改 max_tokens、答案抽取规则、baseline/finetuned 对照方式、DeepSeek 复核模式。
 ```
 
 这个例子体现的是：
 
-- 结构化文档能被压成高密度工作文本
-- 字段名锚点仍然保留
+- benchmark / ops 规则可被压成高密度工作文本
+- 路径、参数名、对照方式、工具名仍然保留
 - 输出不是摘要，而是保真压缩改写
 
 ### Example C: Link-Heavy Material Is Still Hard
