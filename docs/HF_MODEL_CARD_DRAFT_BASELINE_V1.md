@@ -9,6 +9,13 @@
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的 plain-text 压缩改写模型。  
 它将中文长段自然语言压缩为更短的中文文本，同时尽量保持语义保真、锚点保留与大模型可读性。
 
+它的目标风格不是普通摘要文本，而是：
+
+- 轻结构化
+- 轻文言压缩感
+- 现代中文主体
+- 大模型继续易读
+
 当前 baseline 配置：
 
 - base model: `Qwen/Qwen3.5-0.8B`
@@ -35,6 +42,46 @@
 - diff / patch 压缩
 - 自由摘要、主观总结、创作式改写
 
+## Distinctive Design Choices
+
+### Style Constraint
+
+本项目不是让模型自由发挥“压缩感”，而是明确约束输出落在：
+
+- 轻结构化
+- 轻文言压缩感
+- 保真优先
+- 现代中文可读
+
+这使得模型输出更接近“高信息密度工作文本”，而不是常见摘要语气。
+
+### Anchor-Heavy Data Construction
+
+当前标准集不是回避工程锚点，而是主动把它们纳入主分布。
+
+- total samples: `1234`
+- anchor rows: `1223 / 1234`，约 `99.1%`
+- avg anchor count: `3.96`
+
+这意味着模型在训练中持续接触：
+
+- 路径
+- 文件名
+- URL
+- 命令
+- 参数
+- repo / model id
+- 关键数字条件
+
+### Deployment-Oriented Evaluation
+
+评测明确区分：
+
+- `strict anchors`
+- `soft anchors`
+
+原因是部署可用性里最重要的通常不是“编号是否轻微变化”，而是“关键路径、命令、文件名、URL 是否被压坏”。
+
 ## Model Behavior
 
 当前风格目标：
@@ -59,12 +106,15 @@
 - dataset tag: `standardset_v6_1234`
 - total samples: `1234`
 - split: `973 / 129 / 132`
+- anchor rows: `1223 / 1234`
+- avg anchor count: `3.96`
 
 数据来源原则：
 
 - 中文 Agent / 文档工作流文本优先
 - 真实项目文档、任务说明、进度同步、结果解释优先
 - 保留少量真实工程锚点
+- 主动纳入高锚点比例样本
 - 不把 raw code / raw logs / raw configs 作为主任务数据
 
 数据构建流程：
@@ -123,6 +173,12 @@
 - 不把自动脚本评分直接当成质量真值
 - 低分样本必须结合原文、参考压缩文、模型输出做人工复核
 - soft-anchor 波动不能直接推导为模型能力显著下降
+
+这也是本项目和普通“训一个压缩模型看看”路线的差异之一：
+
+- 更重视 strict anchor 保真
+- 更重视 case-level audit
+- 更强调是否能真实嵌入上游系统，而不是只看单一平均分
 
 ## Example Prompt Pattern
 
