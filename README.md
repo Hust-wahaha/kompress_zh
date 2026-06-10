@@ -157,6 +157,99 @@
 - 路径和文件名仍然保留
 - 后续模型继续读时，约束没有被压坏
 
+## Real Examples from the Test Set
+
+下面不是手写 demo，而是来自当前 baseline 测试集的真实样本类型。
+
+### Example A: Checklist Compression with Anchor Preservation
+
+原文：
+
+```text
+复制下面模板，直接接在文末：
+
+- “本次工作”写动作，不写空话
+例：`补跑 s800 全量 baseline vs finetuned 评测`
+
+- “修改/涉及文件”必须给相对路径
+例：`scripts/eval_compare_full.py`、`docs/PROJECT_PROGRESS.md`
+
+- “建议下一步”要让下一个同学可以直接开做
+```
+
+模型输出：
+
+```text
+复制模板，接文末：
+- “本次工作”写动作，勿空话：补跑 s800 全量 baseline vs finetuned 评测
+- “修改/涉及文件”须给相对路径：scripts/eval_compare_full.py、docs/PROJECT_PROGRESS.md
+- “建议下一步”须让下一位同学可直接开做
+```
+
+这个例子体现的是：
+
+- checklist 被压紧
+- 风格落在轻结构化 + 轻文言
+- 关键路径与文件名保留
+- 输出仍然适合继续进入下一步 Agent 流程
+
+### Example B: Dense Schema / Spec Compression
+
+原文：
+
+```text
+### 主仓库核心必填
+
+### 结构化思维方向可选必填
+
+- 做 structuredthink 任务时：
+- `structured_think`
+
+### think 方向可选必填
+
+- 做当前主线 think 任务时：
+- `modern_think`
+- `classical_think`
+```
+
+模型输出：
+
+```text
+主仓库核心必填：结构化思维方向可选必填，做 structuredthink 任务时必填 `structured_think`；think 方向可选必填，做当前主线 think 任务时必填 `modern_think` 或 `classical_think`。
+```
+
+这个例子体现的是：
+
+- 结构化文档能被压成高密度工作文本
+- 字段名锚点仍然保留
+- 输出不是摘要，而是保真压缩改写
+
+### Example C: Link-Heavy Material Is Still Hard
+
+原文：
+
+```text
+- [CHINESE_KOMPRESS_ROUTE_COMPARISON.md](./CHINESE_KOMPRESS_ROUTE_COMPARISON.md)
+- 这是路线比较文档，不是最终执行稿。
+
+- [WHY_NO_CHINESE_KOMPRESS_YET.md](./WHY_NO_CHINESE_KOMPRESS_YET.md)
+- [CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md](./CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md)
+```
+
+模型输出：
+
+```text
+[CHINESE_KOMPRESS_ROUTE_COMPARISON.md](./CHINESE_KOMPRESS_ROUTE_COMPARISON.md) 为路线比较文档，非最终执行稿。[WHY_NO_CHINESE_KOMPRESS_YET.md](./WHY_NO_CHINESE_KOMPRESS_YET.md)、[CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md](./CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md) 为背景调研材料。
+```
+
+这个例子体现的不是优点，而是当前 baseline 的真实边界：
+
+- 锚点保住了
+- 但 markdown link 壳子留得太多
+- 说明这版仍偏保守，尤其在“本可更激进压缩”的样本上
+
+成熟项目不该只展示好看的例子，也该把当前 failure mode 讲清楚。
+
 ## Baseline Snapshot
 
 当前 baseline 已完成：
@@ -213,6 +306,32 @@
 - strict / soft 分层评测让我们真正知道“有没有把关键东西压坏”
 
 这也是它和普通中文压缩模型最实用的差异。
+
+## Use Cases
+
+当前最适合 `kompress_zh` 的输入类型：
+
+- 中文任务说明与执行要求
+- 中文规范、流程、交付说明
+- 中文进度同步与结果解释
+- 中文项目文档中的长自然语言段落
+- 混有少量路径、命令、文件名、数字条件的工作文本
+
+当前不适合直接让它处理的内容：
+
+- raw code
+- raw JSON / YAML / XML
+- logs / stack traces
+- diff / patch
+- 需要自由发挥的摘要或创作式改写
+
+最合适的系统位置是：
+
+- 先由上游路由识别“中文 plain-text 长段”
+- 再交给 `kompress_zh`
+- 其余结构化内容继续走专门压缩链路
+
+这就是它和 `headroom_zh` 的天然契合点。
 
 ## Quick Facts
 
@@ -276,6 +395,24 @@ python scripts/eval.py --dataset-tag standardset_v6_1234 --checkpoint <checkpoin
 - 对本可大幅压缩的样本，经常只做到“稳妥改写”
 - 尚未完成大规模真实线上接入验证
 - 尚未发布正式 Hugging Face 模型卡与 inference repo
+
+## Failure Modes We Explicitly Track
+
+我们当前最关注的 failure modes 不是抽象的“效果不好”，而是这些部署里真的会出问题的类型：
+
+1. 该压得更狠时仍然偏保守
+   - 常见于 link-heavy 文本、说明性段落、可明显重组的材料。
+
+2. soft anchors 波动引发误判
+   - 例如编号、轻格式 token 变化，会让粗糙脚本误报，但未必真影响可用性。
+
+3. 少数样本会压掉“下一步 / 风险 / 交付”类提示
+   - 这类 case 需要人工抽查，而不能只看均值。
+
+4. 极高密度 checklist / 规范文本本来就难压
+   - 这类样本若被误判成“模型太差”，会把训练方向带偏。
+
+我们把这些 failure modes 明说出来，是因为这个项目本来就不是“只要指标好看就行”的路线。
 
 但它已经证明了三件很重要的事：
 
