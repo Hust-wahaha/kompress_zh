@@ -1,22 +1,15 @@
 # HF Model Card Draft: kompress_zh baseline v1
 
-本文档是面向 Hugging Face 发布的第一版 model card 草稿。
-
-当前版本仍是仓库内草稿，但写法已按对外发布口径组织。
-
-## Model Summary
+> First public baseline for Chinese agent-grade plain-text compression.
 
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的 plain-text 压缩改写模型。  
-它将中文长段自然语言压缩为更短的中文文本，同时尽量保持语义保真、锚点保留与大模型可读性。
+它的目标不是生成“更像摘要”的文本，而是将中文长段压缩为更短、更密、更适合继续供强模型处理的工作文本，同时尽量保持语义、锚点和执行可用性。
 
-它的目标风格不是普通摘要文本，而是：
+如果只用一句话概括这版 baseline：
 
-- 轻结构化
-- 轻文言压缩感
-- 现代中文主体
-- 大模型继续易读
+> 这是一个面向 `headroom_zh` 一类系统的中文 plain-text compressor baseline，核心特征是轻结构化、轻文言压缩感、anchor-aware 数据设计，以及 case-level 的严格保真审核。
 
-当前 baseline 配置：
+## Release Snapshot
 
 - base model: `Qwen/Qwen3.5-0.8B`
 - training method: `Swift + LoRA`
@@ -24,117 +17,163 @@
 - dataset: `standardset_v6_1234`
 - checkpoint: `reference_v1 / checkpoint-61`
 
-## Intended Use
+核心数字：
 
-适合的场景：
+- `25.7%` average reduction on the evaluated test set
+- `92.2%` strict anchor retention
+- `99.1%` anchor-bearing data in the baseline dataset
 
-- 中文任务说明压缩
-- 中文需求与约束压缩
-- 中文项目文档段落压缩
-- 中文进度同步与结果说明压缩
-- 混有少量路径、命令、数字、文件名的自然语言块压缩
+这一版更适合被描述为：
 
-不适合的场景：
+- first public baseline
+- deployment-oriented compression component
+- reproducible workflow checkpoint
 
-- 代码压缩
-- JSON / YAML / XML 压缩
-- 日志与报错堆栈压缩
-- diff / patch 压缩
-- 自由摘要、主观总结、创作式改写
+而不是最终效果版。
 
-## Distinctive Design Choices
+## What Makes This Project Distinct
 
-### Style Constraint
+很多中文压缩项目默认沿着“摘要化”方向演化，`kompress_zh` 则刻意把任务定义收紧在更偏部署的一侧。
 
-本项目不是让模型自由发挥“压缩感”，而是明确约束输出落在：
+它当前最有辨识度的点主要有四个：
+
+1. 输出风格不是普通摘要，而是 `light structured + light wenyan`
+   - 目标是提高单位长度信息密度，同时保持强模型可继续解析。
+
+2. 数据分布不是纯净自然语言摘要集，而是主动引入大量锚点密集样本
+   - 路径、文件名、命令、URL、参数、数字条件不是噪声，而是要尽量保护的执行锚点。
+
+3. 评测不把所有 anchor 混成一个总分
+   - `strict anchors` 与 `soft anchors` 被分开追踪，以避免误判真实部署风险。
+
+4. 自动脚本不是最终裁判
+   - 低分样本需要回到原文、参考压缩文和模型输出做人工 case review。
+
+## What This Model Is For
+
+`kompress_zh` 适合处理：
+
+- 中文任务说明
+- 中文需求与约束
+- 中文项目文档长段
+- 中文进度同步
+- 中文结果解释
+- 混有路径、命令、文件名、URL、数字条件的自然语言块
+
+它不适合直接处理：
+
+- raw code
+- raw JSON / YAML / XML
+- logs / stack traces
+- diff / patch
+- 自由摘要
+- 主观总结
+- 创作式改写
+
+最合理的系统位置是：
+
+1. 上游路由识别“中文 plain-text 长段”
+2. 交给 `kompress_zh`
+3. 其余结构化内容继续走专门压缩链路
+
+## Core Design Philosophy
+
+### 1. Not a Generic Summarizer
+
+本项目从一开始就不是中文摘要器路线。
+
+核心目标是：
+
+- 更短
+- 仍保真
+- 仍保留关键锚点
+- 仍适合后续模型继续读
+
+也就是说，压缩后的输出要继续承担工作文本角色，而不是只提供一个“人类可读总结”。
+
+### 2. Style-Constrained Compression
+
+目标风格不是普通摘要腔，而是：
 
 - 轻结构化
 - 轻文言压缩感
-- 保真优先
-- 现代中文可读
+- 现代中文主体
+- 高信息密度
+- 大模型继续可解析
 
-这使得模型输出更接近“高信息密度工作文本”，而不是常见摘要语气。
+我们刻意避免：
 
-### Anchor-Heavy Data Construction
+- 纯古文
+- 过度润色
+- 泛摘要口吻
+- 为了“高级感”牺牲执行可读性
 
-当前标准集不是回避工程锚点，而是主动把它们纳入主分布。
+### 3. Anchor-Aware Data Construction
 
-- total samples: `1234`
-- anchor rows: `1223 / 1234`，约 `99.1%`
-- avg anchor count: `3.96`
+很多压缩模型会天然把路径、命令、URL、文件名、数字条件视为冗余噪声。  
+`kompress_zh` 反过来把它们视为部署场景里最需要保护的部分之一。
 
-这意味着模型在训练中持续接触：
+当前标准集：
 
-- 路径
-- 文件名
-- URL
-- 命令
-- 参数
-- repo / model id
-- 关键数字条件
-
-### Deployment-Oriented Evaluation
-
-评测明确区分：
-
-- `strict anchors`
-- `soft anchors`
-
-原因是部署可用性里最重要的通常不是“编号是否轻微变化”，而是“关键路径、命令、文件名、URL 是否被压坏”。
-
-## Model Behavior
-
-当前风格目标：
-
-- 保真优先
-- 轻结构化
-- 轻文言压缩感
-- 严格避免编造新事实
-- 尽量保留 strict anchors
-
-当前已知行为特征：
-
-- 在 strict anchor 保留上表现较强
-- 中文输出自然度较稳定
-- 整体压缩倾向偏保守
-- 对可明显压缩样本，常更像“稳妥改写”而非“强压缩”
-
-## Training Data
-
-当前第一版标准集：
-
-- dataset tag: `standardset_v6_1234`
 - total samples: `1234`
 - split: `973 / 129 / 132`
 - anchor rows: `1223 / 1234`
 - avg anchor count: `3.96`
 
-数据来源原则：
+这意味着数据分布不是“纯净自然语言摘要集”，而是主动覆盖 anchor-heavy 的真实工作文本。
 
-- 中文 Agent / 文档工作流文本优先
-- 真实项目文档、任务说明、进度同步、结果解释优先
-- 保留少量真实工程锚点
-- 主动纳入高锚点比例样本
-- 不把 raw code / raw logs / raw configs 作为主任务数据
+### 4. Deployment-Oriented Evaluation
 
-数据构建流程：
+本项目没有把所有锚点混成一个粗糙总分，而是明确区分：
 
-1. 扩原料池
-2. source filtering
-3. teacher labeling with `DeepSeek V4 Pro`
-4. review queue routing
-5. final audit sampling
-6. manual review
-7. official merge
-8. train/val/test export
+- `strict anchors`
+  - URL
+  - 路径
+  - 文件名
+  - 命令 / 参数
+  - repo / model id
+- `soft anchors`
+  - 编号
+  - 字段名
+  - identifier
+  - 轻格式 token
 
-## Evaluation
+这是一个很重要的设计，因为真实部署里最严重的错误通常不是“编号轻微变化”，而是“路径、命令、文件名被压坏”。
+
+### 5. Designed for Integration, Not Just Offline Scores
+
+`kompress_zh` 的目标一直不是单纯做一个离线压缩 benchmark。
+
+它更接近一个待嵌入模块：
+
+- 上游负责识别中文 plain-text 长段
+- `kompress_zh` 负责高保真压缩
+- 下游强模型继续消费压缩后的上下文
+
+因此，这个 baseline 更应该被理解为系统组件起点，而不是一次性模型展示。
+
+## Behavior Profile
+
+当前已知行为特征：
+
+- strict anchor 保留较强
+- 中文输出自然度稳定
+- 风格能稳定落在“轻结构化 + 轻文言压缩感”
+- 整体压缩倾向偏保守
+- 对本可明显再压的样本，常更像“稳妥改写”而非“强压缩”
+
+更准确地说：
+
+> 这是一个已经可用的 baseline compressor，但还不是压缩激进度最优版。
+
+## Evaluation Summary
 
 测试集结果：
 
 | Metric | Value |
 | --- | --- |
 | Avg prediction ratio | `0.7425` |
+| Avg reduction | `25.7%` |
 | Avg char F1 | `0.8039` |
 | Avg anchor retention | `0.8157` |
 | Avg strict anchor retention | `0.9216` |
@@ -149,43 +188,53 @@
 | Eval loss | `0.5315` |
 | Eval token acc | `0.8566` |
 
-## Limitations
+## Why These Metrics Matter
 
-当前限制包括：
+如果只看压缩率，会误解这个模型。
 
-- 压缩激进度偏保守
-- 尚未覆盖更广泛线上真实流量分布
-- 暂未提供正式 benchmark leaderboard 风格的多模型对比
-- 暂未提供公开 inference demo
+`kompress_zh` 真正更有意义的点是：
 
-因此该版本更适合被描述为：
+- 在 anchor-heavy 数据上仍能稳定压缩
+- strict anchors 保留已达到较强水平
+- 数据、风格、评测都围绕真实 Agent 工作文本设计
+- 输出继续适合进入 `headroom_zh` 一类系统的下游推理链路
 
-- first public baseline
-- reproducible workflow checkpoint
-- high-quality seed model line
+## Failure Modes We Track Explicitly
 
-而不是最终效果版。
+我们关心的不是抽象的“效果不好”，而是部署里真的会出问题的 failure modes：
+
+1. 该压得更狠时仍偏保守
+   - 常见于 link-heavy 文本和说明性段落。
+
+2. soft anchors 波动引发误判
+   - 若不区分 strict / soft，很容易把次要变化误判成严重退化。
+
+3. 少数样本压掉“下一步 / 风险 / 交付”类提示
+   - 这类问题不能只靠均值发现。
+
+4. 极高密度 checklist / 规范文本本来就难压
+   - 若误判成模型太差，会直接把训练方向带偏。
 
 ## Safety and Reliability Notes
 
-当前项目特别强调：
+本项目特别强调：
 
-- 不把自动脚本评分直接当成质量真值
+- 不把自动脚本评分直接当成真值
 - 低分样本必须结合原文、参考压缩文、模型输出做人工复核
-- soft-anchor 波动不能直接推导为模型能力显著下降
+- `soft anchor` 波动不能直接推导为模型能力显著下降
 
-这也是本项目和普通“训一个压缩模型看看”路线的差异之一：
+这也是它与很多“先训一个压缩模型看看”路线的主要差别：
 
 - 更重视 strict anchor 保真
 - 更重视 case-level audit
-- 更强调是否能真实嵌入上游系统，而不是只看单一平均分
+- 更重视系统集成可用性
 
 ## Example Prompt Pattern
 
 推荐输入模式：
 
 ```text
-请将下面这段中文文本压缩改写为更短版本。要求：保留核心语义；尽量保留路径、命令、文件名、数字等关键锚点；允许轻结构化；不要编造新信息。
+请将下面这段中文文本压缩改写为更短版本。要求：保留核心语义；尽量保留路径、命令、文件名、数字等关键锚点；允许轻结构化；允许轻文言压缩感；不要编造新信息。
 
 <原文>
 ...
@@ -199,8 +248,15 @@
 - `headroom_zh` 的上游中文 plain-text compressor 候选
 - 后续更大规模数据扩展与第二版训练的起点
 
+它当前还不适合被描述为：
+
+- final production model
+- strongest compression variant
+- universal Chinese compressor
+
 ## References
 
+- [README.md](../README.md)
 - [CURRENT_MAINLINE_QWEN35_COMPRESSOR.md](./CURRENT_MAINLINE_QWEN35_COMPRESSOR.md)
 - [TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md](./TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
 - [KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md](./KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md)

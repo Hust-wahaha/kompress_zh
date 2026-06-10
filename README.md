@@ -129,6 +129,24 @@
 
 正因为边界足够窄，它才更像一个能稳定嵌入系统的模块，而不是一个泛化模糊的 demo。
 
+## Method Overview
+
+`kompress_zh` 当前路线可以概括成四步：
+
+1. `source pool`
+   - 从真实中文工作文本里抽取可压缩段落，而不是拿泛摘要语料替代。
+
+2. `teacher labeling`
+   - 用受约束 prompt 生成“轻结构化 + 轻文言压缩感”的参考压缩文，而不是放任 teacher 自由摘要。
+
+3. `anchor-aware review and eval`
+   - 用脚本做大规模筛查，但把 case 级人工复核放在最后裁决位，尤其关注 strict anchors 是否真的丢失。
+
+4. `downstream integration`
+   - 目标不是停在离线分数，而是让压缩后的中文上下文能继续进入 `headroom_zh` 一类系统的后续推理链路。
+
+这四步合在一起，定义的是一个**可部署的中文 plain-text compression workflow**，而不只是“训了个压缩模型”。
+
 ## A Compression Style That Actually Matters
 
 下面这个例子不是在展示“能不能写短”，而是在展示 `kompress_zh` 追求的风格目标。
