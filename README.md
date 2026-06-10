@@ -5,7 +5,7 @@
 [![Task](https://img.shields.io/badge/task-plain--text_compression-7c3aed)](./docs/CURRENT_MAINLINE_QWEN35_COMPRESSOR.md)
 [![Model](https://img.shields.io/badge/model-Qwen3.5--0.8B-111827)](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
 [![Method](https://img.shields.io/badge/method-Swift%20%2B%20LoRA-b45309)](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
-[![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_DRAFT_BASELINE_V1.md)
+[![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
 
 <p align="center">
   <img src="./docs/assets/readme/kompress_zh_banner_v3.png" alt="kompress_zh README banner" width="100%">
@@ -441,7 +441,7 @@ docs/
 1. [docs/CURRENT_MAINLINE_QWEN35_COMPRESSOR.md](./docs/CURRENT_MAINLINE_QWEN35_COMPRESSOR.md)
 2. [docs/KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md](./docs/KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md)
 3. [docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
-4. [docs/HF_MODEL_CARD_DRAFT_BASELINE_V1.md](./docs/HF_MODEL_CARD_DRAFT_BASELINE_V1.md)
+4. [docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
 5. [docs/README.md](./docs/README.md)
 
 ## Quick Start
