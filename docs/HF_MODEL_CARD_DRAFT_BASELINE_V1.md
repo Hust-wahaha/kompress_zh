@@ -22,6 +22,7 @@
 - `25.7%` average reduction on the evaluated test set
 - `92.2%` strict anchor retention
 - `99.1%` anchor-bearing data in the baseline dataset
+- evaluated on the `2026-06-10` baseline-v1 test split (`132` samples)
 
 这一版更适合被描述为：
 
@@ -30,6 +31,22 @@
 - reproducible workflow checkpoint
 
 而不是最终效果版。
+
+## Evaluation Context
+
+为避免把离线数字说得过满，这里明确当前口径：
+
+- evaluation date: `2026-06-10`
+- test split size: `132`
+- train / val / test: `973 / 129 / 132`
+- inference mode: `language-model-only`
+- base family: `Qwen3.5-0.8B`
+
+因此，本页数字应理解为：
+
+- 一个已成立的首版 baseline 快照
+- 面向 anchor-heavy 中文 Agent 文本的离线结果
+- 后续公开版本继续迭代时的参照点
 
 ## What Makes This Project Distinct
 
@@ -75,6 +92,24 @@
 1. 上游路由识别“中文 plain-text 长段”
 2. 交给 `kompress_zh`
 3. 其余结构化内容继续走专门压缩链路
+
+## Inputs and Outputs
+
+输入侧更接近：
+
+- 中文长段说明文本
+- 中文规约、同步、交付、执行指南
+- 混有路径、命令、URL、文件名、数字条件的自然语言块
+
+输出侧目标是：
+
+- 更短
+- 更密
+- 仍保留核心语义
+- 仍尽量保留 strict anchors
+- 仍适合强模型继续消费
+
+也就是说，它输出的不是“摘要结果”，而是**压缩后的工作文本**。
 
 ## Core Design Philosophy
 

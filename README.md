@@ -15,6 +15,8 @@
 
 > **Qwen3.5-0.8B baseline. 25.7% average reduction on anchor-heavy Chinese agent text. 92.2% strict anchor retention. 99.1% anchor-bearing data.**
 
+> Metrics above refer to the June 10, 2026 baseline-v1 test split (`132` samples).
+
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的压缩改写项目。  
 它专门处理中文自然语言长段，把文本压得更短，同时尽量保留语义、路径、命令、文件名、URL、数字条件等关键锚点，并维持一种适合继续喂给强模型阅读的高信息密度风格。
 
@@ -185,37 +187,34 @@
 
 下面不是手写 demo，而是来自当前 baseline 测试集的真实 case。
 
-### Example A: Checklist Compression with Anchor Preservation
+### Example A: Execution Consensus Compression
 
 原文：
 
 ```text
-复制下面模板，直接接在文末：
+## 4. 当前最重要的执行共识
 
-- “本次工作”写动作，不写空话
-例：`补跑 s800 全量 baseline vs finetuned 评测`
+后续推进时请默认遵守以下共识：
 
-- “修改/涉及文件”必须给相对路径
-例：`scripts/eval_compare_full.py`、`docs/PROJECT_PROGRESS.md`
-
-- “建议下一步”要让下一个同学可以直接开做
+1. 当前任务不是数学 `think` 监督，而是中文长文本压缩改写。
+2. 当前输出不是 `<think>`，而是 assistant 的可见压缩文本。
+3. 当前主基座仍是 `Qwen/Qwen3.5-0.8B`。
+4. 当前训练方式仍是 `Swift + LoRA`。
+5. 当前必须使用 `language-model-only`，避免把 vision encoder 带进来。
+6. 当前模型只处理 Headroom 路由出来的中文 plain-text 长段。
 ```
 
 模型输出：
 
 ```text
-复制模板，接文末：
-- “本次工作”写动作，勿空话：补跑 s800 全量 baseline vs finetuned 评测
-- “修改/涉及文件”须给相对路径：scripts/eval_compare_full.py、docs/PROJECT_PROGRESS.md
-- “建议下一步”须让下一位同学可直接开做
+后续推进默认遵守共识：任务为中文长文本压缩改写，非数学think监督；输出为assistant可见压缩文本，非<think>；主基座Qwen/Qwen3.5-0.8B；训练方式Swift+LoRA；须用language-model-only，勿带vision encoder；仅处理Headroom路由出的中文plain-text长段。
 ```
 
 这个例子体现的是：
 
-- checklist 被压紧
-- 风格落在轻结构化 + 轻文言
-- 关键路径与文件名保留
-- 输出仍然适合继续进入下一步 Agent 流程
+- 任务边界被大幅压紧，但核心约束未丢
+- `Qwen/Qwen3.5-0.8B`、`language-model-only`、`plain-text` 等关键锚点仍在
+- 输出继续像工作约束，而不是变成泛摘要
 
 ### Example B: Benchmark / Ops Rule Compression
 
@@ -244,7 +243,48 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 - 路径、参数名、对照方式、工具名仍然保留
 - 输出不是摘要，而是保真压缩改写
 
-### Example C: Link-Heavy Material Is Still Hard
+### Example C: Step-by-Step Test Instruction Compression
+
+原文：
+
+```text
+# 单词卡点击功能测试指南
+
+## 方法1: 使用测试页面
+
+1. 打开浏览器访问: `http://localhost:8080/test-popup-click.html`
+2. 点击页面上的"运行自动化测试"按钮
+3. 查看测试结果
+
+## 方法2: 在浏览器控制台运行测试脚本
+
+1. 打开你的应用页面（Reader 组件页面）
+2. 打开浏览器开发者工具（F12）
+3. 在 Console 标签中，粘贴以下代码并运行：
+
+## 方法3: 手动测试步骤
+
+1. **测试基本功能**
+- 点击第一个高亮单词 → 应该显示该单词的单词卡
+- 点击第二个高亮单词 → 应该关闭第一个单词卡，显示第二个单词卡
+- 点击第三个高亮单词 → 应该关闭第二个单词卡，显示第三个单词卡
+```
+
+模型输出：
+
+```text
+方法1：访问http://localhost:8080/test-popup-click.html，点击“运行自动化测试”按钮，查看结果。
+方法2：打开应用页面（Reader组件），打开开发者工具（F12），在Console标签粘贴测试脚本并运行。
+方法3：手动测试：点击第一个高亮单词→显示单词卡；点击第二个高亮单词→关闭第一个，显示第二个；点击第三个高亮单词→关闭第二个，显示第三个。
+```
+
+这个例子体现的是：
+
+- 操作步骤可以被压成更短的执行文本
+- `http://localhost:8080/test-popup-click.html` 与 `F12` 这类执行锚点保留
+- 多步骤说明没有被压成模糊总结
+
+### Example D: One Real Boundary Case
 
 原文：
 
@@ -254,12 +294,14 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 
 - [WHY_NO_CHINESE_KOMPRESS_YET.md](./WHY_NO_CHINESE_KOMPRESS_YET.md)
 - [CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md](./CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md)
+- [CODING_AGENT_DATASET_SURVEY.md](./CODING_AGENT_DATASET_SURVEY.md)
+- 这些是背景调研材料。
 ```
 
 模型输出：
 
 ```text
-[CHINESE_KOMPRESS_ROUTE_COMPARISON.md](./CHINESE_KOMPRESS_ROUTE_COMPARISON.md) 为路线比较文档，非最终执行稿。[WHY_NO_CHINESE_KOMPRESS_YET.md](./WHY_NO_CHINESE_KOMPRESS_YET.md)、[CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md](./CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md) 为背景调研材料。
+[CHINESE_KOMPRESS_ROUTE_COMPARISON.md](./CHINESE_KOMPRESS_ROUTE_COMPARISON.md) 为路线比较文档，非最终执行稿。[WHY_NO_CHINESE_KOMPRESS_YET.md](./WHY_NO_CHINESE_KOMPRESS_YET.md)、[CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md](./CHINESE_KOMPRESS_LANDSCAPE_SURVEY.md)、[CODING_AGENT_DATASET_SURVEY.md](./CODING_AGENT_DATASET_SURVEY.md) 为背景调研材料。
 ```
 
 这个例子体现的不是优点，而是当前 baseline 的真实边界：
@@ -293,6 +335,10 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 | Final train loss | `0.5575` |
 | Final eval loss | `0.5315` |
 | Final eval token acc | `0.8566` |
+
+说明：
+- 上述离线结果对应 `2026-06-10` 的 baseline-v1 评测。
+- 测试集规模为 `132`，train / val / test 划分为 `973 / 129 / 132`。
 
 当前这版模型的定位很明确：
 
