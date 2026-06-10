@@ -1,5 +1,6 @@
 ---
 base_model: Qwen/Qwen3.5-0.8B
+license: apache-2.0
 language:
   - zh
 tags:
@@ -44,6 +45,17 @@ This release should be understood as:
 - a candidate upstream component for `headroom_zh`-style systems
 
 It should not be described as a final production model or as the strongest possible compression variant.
+
+## Release Decisions
+
+The current baseline-v1 release decisions are:
+
+- code license: `Apache-2.0`
+- release format: `LoRA adapter only`
+- data release stance: dataset is **not promised as fully open**
+- weight release stance: baseline `LoRA` weights are intended to be public
+
+The data stance is intentionally conservative because the construction process mixes multiple real-world workflow sources, and not every upstream source should be treated as fully redistributable training data.
 
 ## What Makes This Model Different
 
@@ -205,6 +217,7 @@ These numbers should be interpreted as a strong baseline snapshot for anchor-hea
 - link-heavy material is often not compressed aggressively enough
 - a minority of cases may compress away "next step", "risk", or "delivery" hints
 - large-scale real online integration has not been completed yet
+- the full training dataset is not currently positioned as a fully open release artifact
 
 ## Prompt Pattern
 
@@ -216,6 +229,50 @@ Recommended input pattern:
 <原文>
 ...
 ```
+
+## Minimal Inference Example
+
+For baseline v1, the recommended public release shape is `LoRA adapter only`.
+
+```python
+from transformers import AutoModelForCausalLM, AutoTokenizer
+from peft import PeftModel
+
+base_model = "Qwen/Qwen3.5-0.8B"
+adapter_path = "Hust-wahaha/kompress_zh-baseline-v1-lora"
+
+tokenizer = AutoTokenizer.from_pretrained(base_model, trust_remote_code=True)
+model = AutoModelForCausalLM.from_pretrained(
+    base_model,
+    trust_remote_code=True,
+    device_map="auto",
+    torch_dtype="auto",
+)
+model = PeftModel.from_pretrained(model, adapter_path)
+model.eval()
+
+source_text = """当前统一基线评测入口是 `scripts/eval_compare_full.py`。
+未经统一确认，不要私自修改以下核心口径：
+- `max_tokens`
+- baseline / finetuned 对照方式
+- `DeepSeek` 复核模式"""
+
+prompt = f"""请将下面这段中文文本压缩改写为更短版本。要求：保留核心语义；尽量保留路径、命令、文件名、数字等关键锚点；允许轻结构化；允许轻文言压缩感；不要编造新信息。
+
+<原文>
+{source_text}
+"""
+
+inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
+outputs = model.generate(**inputs, max_new_tokens=192)
+print(tokenizer.decode(outputs[0], skip_special_tokens=True))
+```
+
+Notes:
+
+- baseline v1 is `language-model-only`
+- feed plain text only; do not use vision inputs
+- the intended output is compressed working text, not free-form summarization
 
 ## Release Positioning
 
