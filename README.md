@@ -3,7 +3,7 @@
 [![Status](https://img.shields.io/badge/status-baseline_v1-0f766e)](./docs/KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md)
 [![Language](https://img.shields.io/badge/language-Chinese-1d4ed8)](./docs/CURRENT_MAINLINE_QWEN35_COMPRESSOR.md)
 [![Task](https://img.shields.io/badge/task-plain--text_compression-7c3aed)](./docs/CURRENT_MAINLINE_QWEN35_COMPRESSOR.md)
-[![Model](https://img.shields.io/badge/model-Qwen3.5--0.8B-111827)](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
+[![Model](https://img.shields.io/badge/model-HF%20LoRA%20baseline-111827)](https://huggingface.co/Deserveall/kompress_zh-baseline-v1-lora)
 [![Method](https://img.shields.io/badge/method-Swift%20%2B%20LoRA-b45309)](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
 [![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
 
@@ -16,6 +16,8 @@
 > **Qwen3.5-0.8B baseline. 25.7% average reduction on anchor-heavy Chinese agent text. 92.2% strict anchor retention. 99.1% anchor-bearing data.**
 
 > Metrics above refer to the June 10, 2026 baseline-v1 test split (`132` samples).
+
+> Model repo: [Deserveall/kompress_zh-baseline-v1-lora](https://huggingface.co/Deserveall/kompress_zh-baseline-v1-lora)
 
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的压缩改写项目。  
 它专门处理中文自然语言长段，把文本压得更短，同时尽量保留语义、路径、命令、文件名、URL、数字条件等关键锚点，并维持一种适合继续喂给强模型阅读的高信息密度风格。
@@ -442,7 +444,8 @@ docs/
 2. [docs/KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md](./docs/KOMPRESS_ZH_BASELINE_V1_DECISION_2026-06-10.md)
 3. [docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md](./docs/TRAINING_EVAL_STANDARDSET_V6_REFERENCE_V1_2026-06-10.md)
 4. [docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
-5. [docs/README.md](./docs/README.md)
+5. [Deserveall/kompress_zh-baseline-v1-lora](https://huggingface.co/Deserveall/kompress_zh-baseline-v1-lora)
+6. [docs/README.md](./docs/README.md)
 
 ## Quick Start
 
