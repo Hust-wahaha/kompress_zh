@@ -11,10 +11,14 @@ Current status:
 
 - README is prepared
 - license decision is fixed
-- actual adapter artifacts are not yet present in this local workspace
+- actual adapter artifacts are now present in this local staging directory
+
+Included adapter artifacts:
+
+- `adapter_config.json`
+- `adapter_model.safetensors`
 
 Next action:
 
-- copy the real exported LoRA adapter files from the training output into this directory
 - verify file names match the README
 - upload this directory as the initial Hugging Face model repository content
