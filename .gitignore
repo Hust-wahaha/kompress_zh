@@ -8,6 +8,10 @@ venv/
 
 src/qwen35_zh_plaintext_compressor.egg-info/*
 
+CLAUDE.md
+
+.vscode/*
+
 .DS_Store
 Thumbs.db
 
