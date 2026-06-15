@@ -1,0 +1,11 @@
+# PyTorch (install separately via conda before pip install -r):
+#   conda install pytorch==2.5.1 torchvision torchaudio pytorch-cuda=12.4 -c pytorch -c nvidia
+
+# Core training
+datasets>=2.19.0
+peft>=0.11.0
+ms-swift
+
+# Version pins required on Windows
+transformers>=4.40.0,<5.0  # transformers 5.x requires torch>=2.6; conda pytorch channel tops at 2.5.1
+pyarrow>=16.0,<20.0        # pyarrow 24 causes access violation on Windows at import time
