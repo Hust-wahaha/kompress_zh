@@ -52,6 +52,8 @@ def parse_args() -> argparse.Namespace:
     training = subparsers.add_parser("training")
     training.add_argument("--input-file", type=Path, required=True)
     training.add_argument("--dataset-tag", type=str, default=DEFAULT_DATASET_TAG)
+    training.add_argument("--output-dir", type=Path, default=None,
+                          help="输出目录，默认为 data/final/。指定后将在该目录下创建 {split}_{tag}.jsonl。")
     training.add_argument("--system-prompt", type=str, default=DEFAULT_SYSTEM_PROMPT)
     training.add_argument("--user-prompt", type=str, default=DEFAULT_USER_PROMPT)
     training.add_argument("--default-style-tag", type=str, default=DEFAULT_STYLE_TAG)
@@ -145,6 +147,8 @@ def build_source_pool_rows(
         current_length = 0
         for paragraph in paragraphs:
             for segment in split_long_text(paragraph, max_chars=max_chars):
+                if not has_chinese(segment):
+                    continue
                 candidate_length = current_length + len(segment) + (2 if current_parts else 0)
                 if current_parts and candidate_length > max_chars:
                     chunk_text = normalize_whitespace("\n\n".join(current_parts))
@@ -275,13 +279,17 @@ def build_training_dataset(args: argparse.Namespace) -> None:
     for row in normalized_rows:
         splits[row["split"]].append(row)
 
+    out_dir = args.output_dir if args.output_dir is not None else dataset_file("train", args.dataset_tag).parent
+    out_dir.mkdir(parents=True, exist_ok=True)
+
     for split, items in splits.items():
-        write_jsonl(dataset_file(split, args.dataset_tag), items)
+        write_jsonl(out_dir / f"{split}_{args.dataset_tag}.jsonl", items)
 
     ratios = [char_compression_ratio(row["original_text"], row["compressed_text"]) for row in normalized_rows]
     anchor_rows = [row for row in normalized_rows if row["contains_anchor"]]
     summary = {
         "dataset_tag": args.dataset_tag,
+        "output_dir": str(out_dir),
         "input_file": str(args.input_file),
         "count": len(normalized_rows),
         "split_counts": {split: len(items) for split, items in splits.items()},
@@ -293,7 +301,7 @@ def build_training_dataset(args: argparse.Namespace) -> None:
         if anchor_rows
         else 0.0,
     }
-    dataset_summary_file(args.dataset_tag).write_text(
+    (out_dir / f"dataset_{args.dataset_tag}_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2),
         encoding="utf-8",
     )
