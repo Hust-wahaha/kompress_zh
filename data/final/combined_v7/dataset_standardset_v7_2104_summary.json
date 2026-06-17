@@ -1,0 +1,16 @@
+{
+  "dataset_tag": "standardset_v7_2104",
+  "output_dir": "data\\final\\combined_v7",
+  "input_file": "data\\raw\\labeled_pairs_combined_v7.jsonl",
+  "count": 2104,
+  "split_counts": {
+    "train": 1655,
+    "val": 209,
+    "test": 240
+  },
+  "avg_original_chars": 479.62,
+  "avg_compressed_chars": 322.08,
+  "avg_compression_ratio": 0.6734,
+  "anchor_row_count": 2093,
+  "avg_anchor_count": 5.58
+}
