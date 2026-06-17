@@ -1,0 +1,16 @@
+{
+  "dataset_tag": "yyc_sessions_v1_870",
+  "output_dir": "data\\final\\yyc_sessions_v1",
+  "input_file": "data\\raw\\labeled_pairs_yyc_sessions_v1_p2_audited_merge.jsonl",
+  "count": 870,
+  "split_counts": {
+    "train": 682,
+    "val": 80,
+    "test": 108
+  },
+  "avg_original_chars": 549.05,
+  "avg_compressed_chars": 383.89,
+  "avg_compression_ratio": 0.6976,
+  "anchor_row_count": 870,
+  "avg_anchor_count": 7.86
+}
