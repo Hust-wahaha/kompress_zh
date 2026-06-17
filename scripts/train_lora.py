@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import platform
 import sys
 from pathlib import Path
 
@@ -44,6 +45,13 @@ def parse_args() -> argparse.Namespace:
         action=argparse.BooleanOptionalAction,
         default=True,
         help="Must remain enabled for this plain-text compressor; vision encoder is not used.",
+    )
+    _default_workers = 0 if platform.system() == "Windows" else 1
+    parser.add_argument(
+        "--dataloader-num-workers",
+        type=int,
+        default=_default_workers,
+        help="Number of DataLoader workers. Must be 0 on Windows (multiprocessing spawn limitation).",
     )
     return parser.parse_args()
 
@@ -147,7 +155,7 @@ def main() -> None:
         num_train_epochs=args.num_train_epochs,
         save_total_limit=2,
         logging_steps=args.logging_steps,
-        dataloader_num_workers=1,
+        dataloader_num_workers=args.dataloader_num_workers,
         data_seed=42,
     )
 
