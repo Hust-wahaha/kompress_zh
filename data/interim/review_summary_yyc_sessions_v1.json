@@ -1,0 +1,22 @@
+{
+  "input_file": "data\\raw\\labeled_pairs_yyc_sessions_v1.jsonl",
+  "queue_file": "data\\interim\\review_queue_yyc_sessions_v1.jsonl",
+  "sample_file": "data\\interim\\review_sample_yyc_sessions_v1.jsonl",
+  "count": 1325,
+  "avg_compression_ratio": 0.6276,
+  "avg_anchor_count": 8.65,
+  "review_tier_counts": {
+    "P0": 182,
+    "P1": 272,
+    "P2": 871
+  },
+  "length_bucket_counts": {
+    "long": 240,
+    "medium": 1025,
+    "short": 60
+  },
+  "sample_count": 48,
+  "sample_tier_counts": {
+    "P0": 48
+  }
+}
