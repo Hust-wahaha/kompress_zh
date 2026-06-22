@@ -8,7 +8,7 @@
 [![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
 
 <p align="center">
-  <img src="./docs/assets/readme/kompress_zh_banner_v3.png" alt="kompress_zh README banner" width="100%">
+  <img src="./docs/assets/readme/kompress_zh_banner_v6_full.png" alt="kompress_zh README banner" width="100%">
 </p>
 
 > A Chinese plain-text compressor for agent-grade context, not a generic summarizer.
