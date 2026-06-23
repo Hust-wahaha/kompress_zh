@@ -8,7 +8,7 @@
 [![Anchor-Aware](https://img.shields.io/badge/focus-anchor--aware-critical)](./docs/HF_MODEL_CARD_BASELINE_V1_RELEASE.md)
 
 <p align="center">
-  <img src="./docs/assets/readme/kompress_zh_banner_v6_full.png" alt="kompress_zh README banner" width="100%">
+  <img src="./docs/assets/readme/kompress_zh_banner_v9_case2_refined.png" alt="kompress_zh README banner" width="100%">
 </p>
 
 > A Chinese plain-text compressor for agent-grade context, not a generic summarizer.
@@ -18,11 +18,13 @@
 > Metrics above refer to the June 10, 2026 baseline-v1 test split (`132` samples).
 
 > Model repo: [Deserveall/kompress_zh-baseline-v1-lora](https://huggingface.co/Deserveall/kompress_zh-baseline-v1-lora)
+>
+> Integration path: [`headroom-zh`](https://github.com/Hust-wahaha/headroom-zh) uses `kompress_zh` as its Chinese plain-text compression branch while preserving upstream `Kompress` routes for other content types.
 
 `kompress_zh` 是一个面向中文 Agent / 文档工作流的压缩改写项目。  
 它专门处理中文自然语言长段，把文本压得更短，同时尽量保留语义、路径、命令、文件名、URL、数字条件等关键锚点，并维持一种适合继续喂给强模型阅读的高信息密度风格。
 
-它的目标从来不是“写个摘要”，而是做一个**可嵌入 `headroom_zh` 一类上下文压缩系统的中文 plain-text 组件**。
+它的目标从来不是“写个摘要”，而是做一个**可独立复用、也可直接嵌入 [`headroom-zh`](https://github.com/Hust-wahaha/headroom-zh) 的中文 plain-text 组件**。
 
 ## Core Claim
 
@@ -147,7 +149,7 @@
    - 用脚本做大规模筛查，但把 case 级人工复核放在最后裁决位，尤其关注 strict anchors 是否真的丢失。
 
 4. `downstream integration`
-   - 目标不是停在离线分数，而是让压缩后的中文上下文能继续进入 `headroom_zh` 一类系统的后续推理链路。
+   - 目标不是停在离线分数，而是让压缩后的中文上下文能继续进入 [`headroom-zh`](https://github.com/Hust-wahaha/headroom-zh) 这类系统的后续推理链路。
 
 这四步合在一起，定义的是一个**可部署的中文 plain-text compression workflow**，而不只是“训了个压缩模型”。
 
@@ -347,7 +349,7 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 - 它已经是一个**成立的 baseline**
 - 它在保真与 strict anchor 保留上已经可用
 - 它仍然偏保守，不是最终效果版
-- 它已经足够支撑后续 `headroom_zh` 的第一轮真实集成验证
+- 它已经足够支撑后续 [`headroom-zh`](https://github.com/Hust-wahaha/headroom-zh) 的第一轮真实集成验证
 
 如果只看压缩率，你会低估这个项目的价值。  
 更值得看的其实是：
@@ -357,9 +359,9 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 - `strict anchor` 保留已经达到 `0.9216`
 - 项目已经具备组件级可用性的雏形
 
-## Why This Matters for headroom_zh
+## Why This Matters for headroom-zh
 
-`headroom_zh` 真正需要的，不是一个“能把话写短”的模型，而是一个：
+[`headroom-zh`](https://github.com/Hust-wahaha/headroom-zh) 真正需要的，不是一个“能把话写短”的模型，而是一个：
 
 - 能压缩中文长段
 - 仍保留关键执行锚点
@@ -399,14 +401,14 @@ Benchmark 口径不得私自改：统一基线入口 scripts/eval_compare_full.p
 - 再交给 `kompress_zh`
 - 其余结构化内容继续走专门压缩链路
 
-这就是它和 `headroom_zh` 的天然契合点。
+这就是它与 `headroom-zh` 的天然契合点：工程上可解耦为独立项目，系统上又能作为中文主链路的关键组件。
 
 ## Quick Facts
 
 | Label | Value |
 | --- | --- |
 | Project Type | Chinese plain-text compression |
-| Deployment Goal | `headroom_zh`-style context compression |
+| Deployment Goal | `headroom-zh` Chinese context compression |
 | Output Style | light structure + light wenyan |
 | Data Character | anchor-heavy |
 | Eval Philosophy | strict/soft split + case audit |
@@ -487,14 +489,14 @@ python scripts/eval.py --dataset-tag standardset_v6_1234 --checkpoint <checkpoin
 
 - 中文 Agent plain-text 压缩器这条路线是可做的
 - 轻结构化 + 轻文言 + anchor-aware 的任务定义可以训成稳定 baseline
-- 这套东西确实有望成为 `headroom_zh` 的高价值上游组件
+- 这套东西确实有望成为 `headroom-zh` 的高价值上游组件
 
 ## Roadmap
 
 短期：
 
 - 继续打磨 Hugging Face 首版发布材料
-- 为 `headroom_zh` 准备最小集成验证链路
+- 为 `headroom-zh` 准备最小集成验证链路
 - 固化 baseline 对外叙事与示例
 
 中期：
